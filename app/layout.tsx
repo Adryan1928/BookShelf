@@ -1,14 +1,16 @@
+// /app/layout.tsx
 "use client";
 
-import "./globals.css"; 
+import "./globals.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState, useEffect } from "react";
 
 const menu = [
   { label: "Home", href: "/home" },
-  { label: "Dashboard", href: "/" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Adicionar Livro", href: "/add-book" },
+  { label: "Editar Livro", href: "/edit-book" },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -32,9 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   key={item.href}
                   href={item.href}
                   className={`px-4 py-2 rounded-md font-medium text-lg transition-colors duration-200 ${
-                    ativo
-                      ? "bg-white text-red-800"
-                      : "hover:bg-red-700 hover:text-white"
+                    ativo ? "bg-white text-red-800" : "hover:bg-red-700 hover:text-white"
                   }`}
                 >
                   {item.label}
