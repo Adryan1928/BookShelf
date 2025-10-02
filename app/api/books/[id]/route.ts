@@ -10,4 +10,3 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
     return NextResponse.json({ error: "Erro ao excluir o livro" }, { status: 500 });
   }
 }
-
