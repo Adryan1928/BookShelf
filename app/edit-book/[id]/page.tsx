@@ -1,155 +1,182 @@
+// /app/edit-book/[id]/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { books, Book } from "@/data/books";
+import Link from "next/link";
 
-export default function AddBookPage() {
+export default function EditBookPage({ params }: { params: { id: string } }) {
+  const id = Number(params.id);
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    title: "",
-    author: "",
-    genre: "",
-    edition: "",
-    publisher: "",
-    city: "",
-    phone: "",
-    coverUrl: "",
-  });
+  const [book, setBook] = useState<Book | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  useEffect(() => {
+    const found = books.find((b) => b.id === id) ?? null;
+    setBook(found);
+  }, [id]);
+
+  if (!book) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Livro não encontrado</h1>
+        <p className="text-gray-600">
+          O livro com id <strong>{id}</strong> não foi encontrado.
+        </p>
+        <Link href="/home" className="text-blue-600 mt-4 inline-block">
+          Voltar para Home
+        </Link>
+      </div>
+    );
+  }
+
+  const handleChange = (field: keyof Book, value: any) => {
+    setBook((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Novo livro adicionado:", formData);
-    alert("Livro adicionado com sucesso!");
-    router.push("/");
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSaving(true);
+    setMessage(null);
+
+    // Atualiza o array in-memory (mock)
+    const idx = books.findIndex((b) => b.id === book.id);
+    if (idx >= 0) {
+      books[idx] = { ...book };
+      setMessage("Salvo com sucesso (mock).");
+    } else {
+      setMessage("Erro: não foi possível salvar (mock).");
+    }
+
+    setSaving(false);
+
+    // opcional: navegar de volta
+    // router.push("/home");
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-8 mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
-        Adicionar Novo Livro
-      </h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Título */}
-        <div>
-          <label className="block text-gray-700 font-medium">Título</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-4">Editar Livro</h1>
 
-        {/* Autor */}
-        <div>
-          <label className="block text-gray-700 font-medium">Autor</label>
+      <form onSubmit={handleSave} className="max-w-xl bg-white p-6 rounded shadow">
+        <label className="block mb-3">
+          <span className="font-medium">Título</span>
           <input
-            type="text"
-            name="author"
-            value={formData.author}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.title}
+            onChange={(e) => handleChange("title", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Gênero */}
-        <div>
-          <label className="block text-gray-700 font-medium">Gênero</label>
+        <label className="block mb-3">
+          <span className="font-medium">Autor</span>
           <input
-            type="text"
-            name="genre"
-            value={formData.genre}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.author}
+            onChange={(e) => handleChange("author", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Edição */}
-        <div>
-          <label className="block text-gray-700 font-medium">Edição</label>
+        <label className="block mb-3">
+          <span className="font-medium">Editora</span>
           <input
-            type="text"
-            name="edition"
-            value={formData.edition}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.publisher}
+            onChange={(e) => handleChange("publisher", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Editora */}
-        <div>
-          <label className="block text-gray-700 font-medium">Editora</label>
+        <label className="block mb-3">
+          <span className="font-medium">Ano</span>
           <input
-            type="text"
-            name="publisher"
-            value={formData.publisher}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            type="number"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.year}
+            onChange={(e) => handleChange("year", Number(e.target.value))}
           />
-        </div>
+        </label>
 
-        {/* Cidade */}
-        <div>
-          <label className="block text-gray-700 font-medium">Cidade</label>
+        <label className="block mb-3">
+          <span className="font-medium">Gênero</span>
           <input
-            type="text"
-            name="city"
-            value={formData.city}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.genre ?? ""}
+            onChange={(e) => handleChange("genre", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Telefone */}
-        <div>
-          <label className="block text-gray-700 font-medium">Telefone</label>
+        <label className="block mb-3">
+          <span className="font-medium">Capa (URL)</span>
           <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.cover}
+            onChange={(e) => handleChange("cover", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Capa */}
-        <div>
-          <label className="block text-gray-700 font-medium">URL da Capa</label>
+        <label className="block mb-3">
+          <span className="font-medium">Edição</span>
           <input
-            type="text"
-            name="coverUrl"
-            value={formData.coverUrl}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="mt-1 block w-full border rounded p-2"
+            value={book.edition ?? ""}
+            onChange={(e) => handleChange("edition", e.target.value)}
           />
-        </div>
+        </label>
 
-        {/* Botões */}
-        <div className="flex justify-between mt-6">
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+        <label className="block mb-3">
+          <span className="font-medium">Cidade</span>
+          <input
+            className="mt-1 block w-full border rounded p-2"
+            value={book.city ?? ""}
+            onChange={(e) => handleChange("city", e.target.value)}
+          />
+        </label>
+
+        <label className="block mb-3">
+          <span className="font-medium">Telefone</span>
+          <input
+            className="mt-1 block w-full border rounded p-2"
+            value={book.phone ?? ""}
+            onChange={(e) => handleChange("phone", e.target.value)}
+          />
+        </label>
+
+        <label className="block mb-3">
+          <span className="font-medium">Status</span>
+          <select
+            className="mt-1 block w-full border rounded p-2"
+            value={book.status}
+            onChange={(e) => handleChange("status", e.target.value as Book["status"])}
           >
-            Cancelar
-          </button>
+            <option>Disponível</option>
+            <option>Indisponível</option>
+            <option>Favorito</option>
+            <option>Não Lido</option>
+          </select>
+        </label>
+
+        <div className="flex gap-3 items-center mt-4">
           <button
             type="submit"
-            className="px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700"
+            disabled={saving}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
           >
-            Adicionar Livro
+            {saving ? "Salvando..." : "Salvar"}
           </button>
+
+          <Link href="/home" className="text-gray-600">
+            Voltar
+          </Link>
+
+          {message && <div className="text-sm text-green-700 ml-4">{message}</div>}
         </div>
       </form>
     </div>
   );
 }
+
+
+
