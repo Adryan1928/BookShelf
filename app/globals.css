@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Cores para o tema claro */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+  }
+  .dark {
+    /* Cores para o tema escuro */
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  :root {
+    --foreground: 222.2 84% 4.9%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+  }
+  .dark {
+    --foreground: 210 40% 98%;
+    --muted-foreground: 215 20.2% 65.1%;
+  }
+}
