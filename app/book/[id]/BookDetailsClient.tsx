@@ -2,17 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { Book } from "@/data/books";
+import { DeleteBookDialog } from "@/components/DeleteBookDialog";
+import { useState } from "react";
 
 export default function BookDetailsClient({ book }: { book: Book }) {
   const router = useRouter();
 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const handleOpenEdit = () => {
     router.push(`/book/edit/${book.id}`);
-  };
-
-  const handleRemove = () => {
-    // Aqui você pode abrir um modal de confirmação ou chamar uma API
-    console.log("Remover livro:", book.id);
   };
 
   return (
@@ -58,13 +57,18 @@ export default function BookDetailsClient({ book }: { book: Book }) {
             Editar
           </button>
           <button
-            onClick={handleRemove}
+            onClick={() => setIsDeleteDialogOpen(true)}
             className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition cursor-pointer"
           >
             Remover
           </button>
         </div>
       </div>
+      <DeleteBookDialog
+        open={isDeleteDialogOpen}
+        bookId={book.id}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      />
     </section>
   );
 }

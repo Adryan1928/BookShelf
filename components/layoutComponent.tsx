@@ -22,8 +22,8 @@ export function LayoutComponent({ children }: { children: React.ReactNode }) {
 
     
     return (
-        <section className={`flex min-h-screen transition-colors duration-300 ${theme == "dark" ? "bg-neutral-800" : "bg-gray-100"}`}>
-          <aside className={`w-60 ${theme == "dark" ? "bg-red-950" : "bg-red-700"} text-white flex flex-col p-4`}>
+        <section className={`flex min-h-screen transition-colors duration-300 ${theme != "light" ? "bg-neutral-800" : "bg-gray-100"}`}>
+          <aside className={`w-60 ${theme != "light" ? "bg-red-950" : "bg-red-700"} text-white flex flex-col p-4`}>
             <h1 className="text-2xl font-bold mb-12 mt-4">BookShelf</h1>
             <nav className="flex flex-col space-y-2">
               {menu.map((item) => {
@@ -44,7 +44,7 @@ export function LayoutComponent({ children }: { children: React.ReactNode }) {
           </aside>
 
           <main className="flex-1 p-8">
-            <div>
+            <div className="flex justify-end mb-4">
               <ModeToggle />
             </div>
             {children}

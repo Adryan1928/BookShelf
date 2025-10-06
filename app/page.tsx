@@ -1,7 +1,9 @@
+'use client';
 import { StatCard } from "@/components/statCard";
 import { BookCard } from "@/components/bookCard";
 import { Book, BookOpenCheck, CheckCircle, FileText } from "lucide-react";
 import { books } from "@/data/books";
+import { useTheme } from "next-themes";
 
 
 const stats = [
@@ -14,6 +16,7 @@ const stats = [
 const recentlyReadBooks = books
 
 export default function DashboardPage() {
+  const { theme } = useTheme();
   return (
     <div className="space-y-8">
       {/* Seção de Estatísticas */}
@@ -32,8 +35,8 @@ export default function DashboardPage() {
 
       {/* Seção de Lidos Recentemente */}
       <section>
-        <div className="bg-white p-8 rounded-lg shadow-sm">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">
+        <div className={"p-8 rounded-lg shadow-sm" + (theme != "light" ? " bg-neutral-900" : " bg-white")}>
+          <h2 className={"text-xl font-bold mb-4" + (theme != "light" ? " text-gray-200" : " text-gray-800")}>
             Lidos Recentemente
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
