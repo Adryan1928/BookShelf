@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { books as Books, Generos } from "@/data/books";
+import { useTheme } from "next-themes";
 
 
 
@@ -32,6 +33,8 @@ const formSchema = yup.object({
 
 export default function HomePage() {
     const [filteredBooks, setFilteredBooks] = useState(Books);
+
+    const { theme } = useTheme();
 
     const form = useForm({
         resolver: yupResolver(formSchema),
@@ -119,18 +122,18 @@ export default function HomePage() {
         </section>
 
         <section>
-            <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="flex flex-wrap justify-center items-center gap-6">
-                {filteredBooks.map((book) => (
-                    <BookCard
-                        key={book.title}
-                        id={book.id}
-                        title={book.title}
-                        author={book.author}
-                        coverUrl={book.coverUrl}
-                    />
-                ))}
-            </div>
+            <div className={`${theme == "dark" ? "bg-neutral-800" : "bg-white"} p-8 rounded-lg shadow-sm`}>
+                <div className="flex flex-wrap justify-center items-center gap-6">
+                    {filteredBooks.map((book) => (
+                        <BookCard
+                            key={book.title}
+                            id={book.id}
+                            title={book.title}
+                            author={book.author}
+                            coverUrl={book.coverUrl}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
         </div>
