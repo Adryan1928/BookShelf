@@ -9,8 +9,7 @@ import { ReactNode, useState, useEffect } from "react";
 const menu = [
   { label: "Home", href: "/home" },
   { label: "Dashboard", href: "/" },
-  { label: "Adicionar Livro", href: "/add-book" },
-  { label: "Editar Livro", href: "/edit-book" },
+  { label: "Adicionar Livro", href: "/book/adicionar" },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
