@@ -1,9 +1,8 @@
-// app/bookshelf/[id]/page.tsx
+'use client';
 import { getBookById } from "@/lib/books";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 import React from "react";
-import { toast } from "sonner";
 
 type Book = {
   id: string;
@@ -22,22 +21,17 @@ export default async function BookDetails({ params }: { params: { id: string } }
   const book = await getBookById(params.id);
   if (!book) return notFound();
 
-  // Componente Client para controlar o estado do dialog e exclusão
   function BookDetailsClient({ book }: { book: Book }) {
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const router = useRouter();
 
-    // Função para excluir o livro
     const handleDelete = async () => {
       setLoading(true);
       try {
         const res = await fetch(`/api/books/${book.id}`, { method: "DELETE" });
         if (!res.ok) throw new Error();
-        toast.success("Livro excluído com sucesso!");
         router.push("/bookshelf");
-      } catch {
-        toast.error("Erro ao excluir o livro.");
       } finally {
         setLoading(false);
         setOpen(false);
