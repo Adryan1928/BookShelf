@@ -1,6 +1,7 @@
 import { StatCard } from "@/components/statCard";
 import { BookCard } from "@/components/bookCard";
 import { Book, BookOpenCheck, CheckCircle, FileText } from "lucide-react";
+import { books } from "@/data/books";
 
 
 const stats = [
@@ -10,32 +11,7 @@ const stats = [
   { title: "Total de Páginas Lidas", value: "15.230", icon: <FileText size={32} /> },
 ];
 
-const recentlyReadBooks = [
-  {
-    title: "O Quinze",
-    author: "Rachel de Queiroz",
-
-    coverUrl: "https://i.pinimg.com/736x/ee/ea/36/eeea361df319626c4e385196b3a14116.jpg",
-  },
-  {
-    title: "A Revolução dos Bichos",
-    author: "George Orwell",
-    
-    coverUrl: "https://s3.static.brasilescola.uol.com.br/be/2025/03/capa-do-livro-a-revolucao-dos-bichos-de-george-orwell-publicado-pela-editora-principis.jpg",
-  },
-  {
-    title: "O Hobbit",
-    author: "J.R.R. Tolkien",
-    
-    coverUrl: "https://i.pinimg.com/736x/4b/09/98/4b09981418a482010e228d8dd7bad1d9.jpg",
-  },
-  {
-    title: "Fahrenheit 451",
-    author: "Ray Bradbury",
-
-    coverUrl: "https://i.pinimg.com/736x/7c/5b/15/7c5b153fdc40f631c995f55d26026346.jpg",
-  },
-];
+const recentlyReadBooks = books
 
 export default function DashboardPage() {
   return (
@@ -64,6 +40,7 @@ export default function DashboardPage() {
             {recentlyReadBooks.map((book) => (
               <BookCard
                 key={book.title}
+                id={book.id}
                 title={book.title}
                 author={book.author}
                 coverUrl={book.coverUrl}

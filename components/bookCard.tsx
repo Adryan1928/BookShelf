@@ -9,14 +9,14 @@ interface BookCardProps {
     id: string;
 }
 
-export function BookCard({ title, author, coverUrl }: BookCardProps) {
+export function BookCard({ title, author, coverUrl, id }: BookCardProps) {
     const router = useRouter();
 
     const handleClick = () => {
         router.push(`/book/${id}`);
     }
     return (
-    <div className="flex flex-col items-center text-center transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer">
+    <div className="flex flex-col items-center text-center transition-transform duration-200 ease-in-out hover:scale-105 cursor-pointer" onClick={handleClick}>
         <div className="w-[160px] h-[240px] relative mb-4">
             <Image
                 src={coverUrl}

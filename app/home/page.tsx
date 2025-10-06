@@ -1,6 +1,4 @@
 "use client";
-
-
 import { BookCard } from "@/components/bookCard";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { books as Books, Generos } from "@/data/books";
 
 
 

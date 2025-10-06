@@ -1,15 +1,15 @@
 // /app/edit-book/[id]/page.tsx
 "use client";
-
 import { useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { books, Book } from "@/data/books";
 import { getBookById } from "@/lib/books";
 
 export default async function EditBookPage({ params }: { params: { id: string } }) {
 
-  const book = await getBookById(params.id);
-   if (!book) return notFound();
+//   const book = await getBookById(params.id);
+//    if (!book) return notFound();
+  const book = books[0]; // Mock: pegar o primeiro livro
 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
