@@ -71,6 +71,7 @@ const schema = yup.object({
 export default function AddBookPage({ generos, createBookAction }: AddBookClientPageProps) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<AddBookClientProps>({
     resolver: yupResolver(schema),
@@ -92,10 +93,13 @@ export default function AddBookPage({ generos, createBookAction }: AddBookClient
 
   const handleSave = async (values: AddBookClientProps) => {
     try {
+      setIsLoading(true);
       const response = await createBookAction(values);
       toast.success("📘 Livro adicionado com sucesso!");
+      setIsLoading(false);
       router.push(`/book/${response.id}`);
     } catch (error) {
+      setIsLoading(false);
       toast.error("Erro ao salvar o livro");
     }
   };
@@ -166,7 +170,7 @@ export default function AddBookPage({ generos, createBookAction }: AddBookClient
                       <SelectValue placeholder="Selecione um gênero" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-white max-h-60 overflow-y-auto">
                     {generos.map((g) => (
                       <SelectItem key={g.id} value={g.id}>
                         {g.name}
@@ -336,8 +340,9 @@ export default function AddBookPage({ generos, createBookAction }: AddBookClient
             <Button
               type="submit"
               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
+              disabled={isLoading}
             >
-              Salvar
+              {isLoading ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </form>

@@ -72,6 +72,7 @@ const schema = yup.object({
 export default function EditBookClientPage({ generos, updateBookAction, book }: EditBookClientPageProps) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<EditBookClientProps>({
     resolver: yupResolver(schema),
@@ -80,10 +81,13 @@ export default function EditBookClientPage({ generos, updateBookAction, book }: 
 
   const handleSave = async (values: EditBookClientProps) => {
     try {
+      setIsLoading(true);
       const response = await updateBookAction(values);
       toast.success("📘 Livro editado com sucesso!");
+      setIsLoading(false);
       router.push(`/book/${response.id}`);
     } catch (error) {
+      setIsLoading(false);
       toast.error("Erro ao editar o livro");
     }
   };
@@ -323,8 +327,9 @@ export default function EditBookClientPage({ generos, updateBookAction, book }: 
             <Button
               type="submit"
               className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
+              disabled={isLoading}
             >
-              Editar
+              {isLoading ? "Editando..." : "Editar"}
             </Button>
           </div>
         </form>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
@@ -25,15 +25,19 @@ interface DeleteBookDialogProps {
 export function DeleteBookDialog({ open, bookId, onClose, deleteBook }: DeleteBookDialogProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
     startTransition(async () => {
       try {
+        setIsLoading(true);
         await deleteBook(bookId);
         toast.success("📘 Livro excluído com sucesso!");
         onClose();
-        router.back();
+        setIsLoading(false);
+        router.push("/");
       } catch {
+        setIsLoading(false);
         toast.error("Erro ao excluir o livro.");
       }
     });
@@ -49,15 +53,15 @@ export function DeleteBookDialog({ open, bookId, onClose, deleteBook }: DeleteBo
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onClose} disabled={isPending}>
+          <AlertDialogCancel onClick={onClose} disabled={isPending || isLoading}>
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            disabled={isPending}
+            disabled={isPending || isLoading}
             className="bg-red-600 hover:bg-red-700 text-white"
           >
-            {isPending ? "Excluindo..." : "Excluir"}
+            {isPending || isLoading ? "Excluindo..." : "Excluir"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
