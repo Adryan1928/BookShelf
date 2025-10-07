@@ -27,9 +27,9 @@ import { Genero } from "@/lib/genero";
 import { StarRating } from "@/components/Stars";
 import { toast } from "sonner";
 
-type AddBookClientProps = Omit<Book, "id" | "createdAt" | "updatedAt" | "genre"> & {
-  genreId: string;
-};
+// type AddBookClientProps = Omit<Book, "id" | "createdAt" | "updatedAt" | "genre"> & {
+//   genreId: string;
+// };
 
 interface AddBookClientPageProps {
   generos: Genero[];
@@ -68,17 +68,19 @@ const schema = yup.object({
   status: yup.string().required("O status é obrigatório"),
 });
 
+type AddBookClientProps = yup.InferType<typeof schema>;
+
 export default function AddBookPage({ generos, createBookAction }: AddBookClientPageProps) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<AddBookClientProps>({
+  const form = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: {
       title: "",
       author: "",
-      year: null,
+      year: 0,
       genreId: "",
       pages: undefined,
       rating: undefined,

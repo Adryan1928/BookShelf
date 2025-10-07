@@ -44,7 +44,8 @@ const schema = yup.object({
     .number()
     .typeError("Informe um ano válido")
     .max(new Date().getFullYear(), "Ano inválido")
-    .nullable(),
+    .nullable()
+    .optional(),
   genreId: yup.string().required("O gênero é obrigatório"),
   pages: yup
     .number()
@@ -74,7 +75,7 @@ export default function EditBookClientPage({ generos, updateBookAction, book }: 
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<EditBookClientProps>({
+  const form = useForm<any>({
     resolver: yupResolver(schema),
     defaultValues: book,
   });
