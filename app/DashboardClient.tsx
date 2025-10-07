@@ -40,7 +40,7 @@ export default function DashboardClientPage({ recentlyReadBooks, stats }: Dashbo
                 id={book.id}
                 title={book.title}
                 author={book.author}
-                coverUrl={book.cover}
+                cover={book.cover}
               />
             ))}
             {recentlyReadBooks.length === 0 && (

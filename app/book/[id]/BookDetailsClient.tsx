@@ -1,9 +1,9 @@
 "use client";
-
 import { useRouter } from "next/navigation";
-import { Book } from "@/data/books";
+import { Book } from "@/lib/books";
 import { DeleteBookDialog } from "@/components/DeleteBookDialog";
 import { useState } from "react";
+import { StarRating } from "@/components/Starts";
 
 export default function BookDetailsClient({ book }: { book: Book }) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function BookDetailsClient({ book }: { book: Book }) {
       {/* Imagem */}
       <div className="w-full md:w-1/3 flex justify-center">
         <img
-          src={book.coverUrl}
+          src={book.cover}
           alt={`Capa do livro ${book.title}`}
           className="w-64 h-80 object-cover rounded-lg shadow-md"
         />
@@ -34,19 +34,44 @@ export default function BookDetailsClient({ book }: { book: Book }) {
 
         <div className="border-t border-gray-200 my-2"></div>
 
-        <div className="flex flex-col gap-2 text-gray-700">
-          <p>
-            <span className="font-semibold">Gênero:</span> {book.genre}
-          </p>
-          <p>
-            <span className="font-semibold">Ano de publicação:</span> {book.year}
-          </p>
-          <p>
-            <span className="font-semibold">Editora:</span> {book.publisher}
-          </p>
-          <p className="mt-2">
-            <span className="font-semibold">Descrição:</span> {book.description}
-          </p>
+        <div className="flex gap-4 text-gray-700">
+          <div className="flex flex-col gap-2">
+            <p>
+              <span className="font-semibold">Gênero:</span> {book.genre.name}
+            </p>
+            {book.year && <p>
+              <span className="font-semibold">Ano de publicação:</span> {book.year}
+            </p>}
+            <p>
+              <span className="font-semibold">Páginas:</span> {book.currentPage}/{book.pages}
+            </p>
+            {book.synopsis && <p className="mt-2">
+              <span className="font-semibold">Sinopse:</span> {book.synopsis}
+            </p>}
+            <p className="mt-2">
+              <span className="font-semibold">Status:</span> {book.status}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            {book.rating && (
+              <div className="flex items-center justify-center gap-2">
+                <p>
+                  <span className="font-semibold">Rating:</span> 
+                </p>
+                <StarRating value={book.rating} readOnly />
+              </div>
+            )}
+            {book.isbn && (
+              <p>
+                <span className="font-semibold">ISBN:</span> {book.isbn}
+              </p>
+            )}
+            {book.notes && (
+              <p className="mt-2">
+                <span className="font-semibold">Notas:</span> {book.notes}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="flex gap-4 mt-6">

@@ -30,7 +30,7 @@ export async function getAllBooks(): Promise<(Book & { genre: { id: string; name
 }
 
 export async function getBookById(id: string) {
-  return prisma.book.findUnique({ where: { id } });
+  return prisma.book.findUnique({ where: { id }, include: { genre: true } });
 }
 
 export async function createBook(data: BookPayload) {

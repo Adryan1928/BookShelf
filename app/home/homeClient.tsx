@@ -129,7 +129,7 @@ export default function HomeClientPage({ books, generos }: { books: Book[], gene
                             id={book.id}
                             title={book.title}
                             author={book.author}
-                            coverUrl={book.cover}
+                            cover={book.cover}
                         />
                     ))}
                     {filteredBooks.length === 0 && (
