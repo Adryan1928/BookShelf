@@ -13,20 +13,23 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { deleteBook } from "@/lib/books";
 
 interface DeleteBookDialogProps {
   open: boolean;
   bookId: string;
   onClose: () => void;
+  deleteBook: (id: string) => Promise<void>;
 }
 
-export function DeleteBookDialog({ open, bookId, onClose }: DeleteBookDialogProps) {
+export function DeleteBookDialog({ open, bookId, onClose, deleteBook }: DeleteBookDialogProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = async () => {
     startTransition(async () => {
       try {
+        await deleteBook(bookId);
         toast.success("📘 Livro excluído com sucesso!");
         onClose();
         router.back();

@@ -38,8 +38,17 @@ export async function createBook(data: BookPayload) {
 }
 
 export async function updateBook(id: string, data: Partial<BookPayload>) {
+  const { genreId, ...rest } = data;
 
-  return prisma.book.update({ where: { id }, data });
+  return prisma.book.update({
+    where: { id },
+    data: {
+      ...rest,
+      genre: {
+        connect: { id: genreId },
+      },
+    },
+  });
 }
 
 export async function deleteBook(id: string) {

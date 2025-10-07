@@ -25,13 +25,15 @@ import {
 import { useRouter } from "next/navigation";
 import { Genero } from "@/lib/genero";
 import { StarRating } from "@/components/Stars";
+import { toast } from "sonner";
 
 type AddBookClientProps = Omit<Book, "id" | "createdAt" | "updatedAt" | "genre"> & {
-  genre: string;
+  genreId: string;
 };
 
 interface AddBookClientPageProps {
   generos: Genero[];
+  createBookAction: (values: any) => Promise<any>;
 }
 
 const schema = yup.object({
@@ -42,7 +44,7 @@ const schema = yup.object({
     .typeError("Informe um ano válido")
     .max(new Date().getFullYear(), "Ano inválido")
     .nullable(),
-  genre: yup.string().required("O gênero é obrigatório"),
+  genreId: yup.string().required("O gênero é obrigatório"),
   pages: yup
     .number()
     .typeError("Informe um número válido")
@@ -66,7 +68,7 @@ const schema = yup.object({
   status: yup.string().required("O status é obrigatório"),
 });
 
-export default function AddBookPage({ generos }: AddBookClientPageProps) {
+export default function AddBookPage({ generos, createBookAction }: AddBookClientPageProps) {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -76,7 +78,7 @@ export default function AddBookPage({ generos }: AddBookClientPageProps) {
       title: "",
       author: "",
       year: null,
-      genre: "",
+      genreId: "",
       pages: undefined,
       rating: undefined,
       synopsis: "",
@@ -89,7 +91,13 @@ export default function AddBookPage({ generos }: AddBookClientPageProps) {
   });
 
   const handleSave = async (values: AddBookClientProps) => {
-    console.log(values);
+    try {
+      const response = await createBookAction(values);
+      toast.success("📘 Livro adicionado com sucesso!");
+      router.push(`/book/${response.id}`);
+    } catch (error) {
+      toast.error("Erro ao salvar o livro");
+    }
   };
 
   return (
@@ -148,7 +156,7 @@ export default function AddBookPage({ generos }: AddBookClientPageProps) {
           {/* Gênero */}
           <FormField
             control={form.control}
-            name="genre"
+            name="genreId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Gênero*</FormLabel>
@@ -290,6 +298,34 @@ export default function AddBookPage({ generos }: AddBookClientPageProps) {
                     <SelectItem value="ABANDONADO">Abandonado</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isbn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Isbn</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: 978-3-16-148410-0" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notas pessoais</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: Gostei muito" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

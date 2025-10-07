@@ -5,7 +5,12 @@ import { DeleteBookDialog } from "@/components/DeleteBookDialog";
 import { useState } from "react";
 import { StarRating } from "@/components/Stars";
 
-export default function BookDetailsClient({ book }: { book: Book }) {
+interface BookDetailsClientProps {
+  book: Book;
+  deleteBookAction: (id: string) => Promise<void>;
+}
+
+export default function BookDetailsClient({ book, deleteBookAction }: BookDetailsClientProps) {
   const router = useRouter();
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -52,9 +57,9 @@ export default function BookDetailsClient({ book }: { book: Book }) {
               <span className="font-semibold">Status:</span> {book.status}
             </p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-start">
             {book.rating && (
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2">
                 <p>
                   <span className="font-semibold">Rating:</span> 
                 </p>
@@ -67,7 +72,7 @@ export default function BookDetailsClient({ book }: { book: Book }) {
               </p>
             )}
             {book.notes && (
-              <p className="mt-2">
+              <p>
                 <span className="font-semibold">Notas:</span> {book.notes}
               </p>
             )}
@@ -93,6 +98,7 @@ export default function BookDetailsClient({ book }: { book: Book }) {
         open={isDeleteDialogOpen}
         bookId={book.id}
         onClose={() => setIsDeleteDialogOpen(false)}
+        deleteBook={deleteBookAction}
       />
     </section>
   );
