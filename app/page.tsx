@@ -1,57 +1,17 @@
-'use client';
-import { StatCard } from "@/components/statCard";
-import { BookCard } from "@/components/bookCard";
+import { getAllBooks } from "@/lib/books";
+import DashboardClient from "./DashboardClient";
 import { Book, BookOpenCheck, CheckCircle, FileText } from "lucide-react";
-import { books } from "@/data/books";
-import { useTheme } from "next-themes";
 
-
-const stats = [
-  { title: "Total de Livros", value: 120, icon: <Book size={32} /> },
-  { title: "Livros em Leitura", value: 8, icon: <BookOpenCheck size={32} /> },
-  { title: "Livros Finalizados", value: 45, icon: <CheckCircle size={32} /> },
-  { title: "Total de Páginas Lidas", value: "15.230", icon: <FileText size={32} /> },
+export default async function DashboardPage() {
+  const recentlyReadBooks = await getAllBooks();
+  const readBooks = recentlyReadBooks.filter(book => book.status === 'LIDO');
+  const readingBooks = recentlyReadBooks.filter(book => book.status === 'LENDO');
+  const readPages = recentlyReadBooks.reduce((acc, book) => acc + (book.currentPage || 0), 0);
+  const stats = [
+    { title: "Total de Livros", value: recentlyReadBooks.length, icon: <Book size={32} /> },
+    { title: "Livros em Leitura", value: readingBooks.length, icon: <BookOpenCheck size={32} /> },
+    { title: "Livros Finalizados", value: readBooks.length, icon: <CheckCircle size={32} /> },
+    { title: "Total de Páginas Lidas", value: readPages.toString(), icon: <FileText size={32} /> },
 ];
-
-const recentlyReadBooks = books
-
-export default function DashboardPage() {
-  const { theme } = useTheme();
-  return (
-    <div className="space-y-8">
-      {/* Seção de Estatísticas */}
-      <section>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <StatCard
-              key={stat.title}
-              title={stat.title}
-              value={stat.value}
-              icon={stat.icon}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* Seção de Lidos Recentemente */}
-      <section>
-        <div className={"p-8 rounded-lg shadow-sm" + (theme != "light" ? " bg-neutral-900" : " bg-white")}>
-          <h2 className={"text-xl font-bold mb-4" + (theme != "light" ? " text-gray-200" : " text-gray-800")}>
-            Lidos Recentemente
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-            {recentlyReadBooks.map((book) => (
-              <BookCard
-                key={book.title}
-                id={book.id}
-                title={book.title}
-                author={book.author}
-                coverUrl={book.coverUrl}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+  return <DashboardClient recentlyReadBooks={recentlyReadBooks.slice(0, 5)} stats={stats} />;
 }

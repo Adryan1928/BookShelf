@@ -1,5 +1,5 @@
-import AddBookCleint from "./AddBookClient";
+import AddBookClient from "./AddBookClient";
 
 export default async function BookDetailsPage() {
-  return <AddBookCleint />;
+  return <AddBookClient />;
 }
