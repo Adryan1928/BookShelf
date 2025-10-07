@@ -1,9 +1,8 @@
-import { books as Books } from "@/data/books";
+import { prisma } from "@/lib/prisma";
 
 export async function getBookById(id: string) {
-  return Books.find(book => book.id === id);
-}
-
-export async function deleteBookById(id: string) {
-  // Books = Books.filter(book => book.id !== id);
+  return prisma.book.findUnique({
+    where: { id },
+    include: { genre: true },
+  });
 }

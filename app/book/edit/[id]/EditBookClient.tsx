@@ -1,174 +1,102 @@
 "use client";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { books, Book } from "@/data/books";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type EditBookClientProps = Omit<Book, "id">;
-
-
-const schema = yup.object({
-  title: yup.string().required("O título é obrigatório"),
-  author: yup.string().required("O autor é obrigatório"),
-  publisher: yup.string().required("A editora é obrigatória"),
-  year: yup
-    .number()
-    .typeError("Informe um ano válido")
-    .max(new Date().getFullYear(), "Ano inválido")
-    .required("O ano é obrigatório"),
-  genre: yup.string().required("O gênero é obrigatório"),
-  coverUrl: yup.string().required("A URL da capa é obrigatória"),
-  status: yup.string().required("O status é obrigatório"),
-  description: yup.string().required("A descrição é obrigatória"),
-});
-
-export default function EditBookPage({ book }: { book: Book }) {
+export default function EditBookClient({ book }: { book: any }) {
   const router = useRouter();
-  const form = useForm<EditBookClientProps>({
-    resolver: yupResolver(schema),
-    defaultValues: book,
-  });
+  const [form, setForm] = useState({ ...book });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSave = async (values: EditBookClientProps) => {
-    router.push(`/book/${book.id}`);
-  };
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/books/${book.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Erro ao salvar alterações");
+      router.push("/home");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
-    <section className="max-w-2xl mx-auto bg-white shadow-sm rounded-lg p-8">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-        Editar Livro
-      </h1>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Editar Livro</h1>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSave)} className="space-y-5">
-          {/* Título */}
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Título</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: O Hobbit" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+      {error && <p className="text-red-600 mb-4">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow">
+        <div>
+          <label className="block text-sm font-medium mb-1">Título</label>
+          <input
+            className="w-full border px-3 py-2 rounded"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
+        </div>
 
-          {/* Autor */}
-          <FormField
-            control={form.control}
-            name="author"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Autor</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: J.R.R. Tolkien" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        <div>
+          <label className="block text-sm font-medium mb-1">Autor</label>
+          <input
+            className="w-full border px-3 py-2 rounded"
+            value={form.author}
+            onChange={(e) => setForm({ ...form, author: e.target.value })}
           />
+        </div>
 
-          {/* Editora */}
-          <FormField
-            control={form.control}
-            name="publisher"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Editora</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: HarperCollins" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        <div>
+          <label className="block text-sm font-medium mb-1">Ano</label>
+          <input
+            type="number"
+            className="w-full border px-3 py-2 rounded"
+            value={form.year || ""}
+            onChange={(e) => setForm({ ...form, year: e.target.value })}
           />
+        </div>
 
-          {/* Ano */}
-          <FormField
-            control={form.control}
-            name="year"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ano</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="Ex: 1937" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div>
+          <label className="block text-sm font-medium mb-1">Status</label>
+          <select
+            className="w-full border px-3 py-2 rounded"
+            value={form.status}
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
+          >
+            <option value="QUERO_LER">Quero Ler</option>
+            <option value="LENDO">Lendo</option>
+            <option value="LIDO">Lido</option>
+            <option value="PAUSADO">Pausado</option>
+            <option value="ABANDONADO">Abandonado</option>
+          </select>
+        </div>
 
-          {/* Gênero */}
-          <FormField
-            control={form.control}
-            name="genre"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Gênero</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: Fantasia" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* URL da capa */}
-          <FormField
-            control={form.control}
-            name="coverUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL da Capa</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://exemplo.com/capa.jpg" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Status */}
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-60 overflow-y-auto bg-white">
-                    <SelectItem value="Disponível">Disponível</SelectItem>
-                    <SelectItem value="Indisponível">Indisponível</SelectItem>
-                    <SelectItem value="Favorito">Favorito</SelectItem>
-                    <SelectItem value="Não Lido">Não Lido</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Botões */}
-          <div className="flex gap-3 items-center justify-end pt-4">
-            <Button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer">
-              Salvar
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </section>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            className="px-4 py-2 border rounded"
+            onClick={() => router.back()}
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-60"
+          >
+            {saving ? "Salvando..." : "Salvar"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
