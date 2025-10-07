@@ -6,7 +6,7 @@ import { Book as BookType } from "@/lib/books";
 
 interface DashboardClientProps {
   recentlyReadBooks: BookType[];
-  stats: { title: string; value: string; icon: React.ReactNode }[];
+  stats: { title: string; value: number; icon: React.ReactNode }[];
 }
 
 export default function DashboardClientPage({ recentlyReadBooks, stats }: DashboardClientProps) {
@@ -46,9 +46,6 @@ export default function DashboardClientPage({ recentlyReadBooks, stats }: Dashbo
             {recentlyReadBooks.length === 0 && (
                 <p className={theme != "light" ? "text-gray-200" : "text-gray-800"}>Nenhum livro encontrado.</p>
             )}
-          </div>
-        </div>
-      </section>
           </div>
         </div>
       </section>

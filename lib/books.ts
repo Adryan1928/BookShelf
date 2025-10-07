@@ -1,12 +1,8 @@
 // lib/books.ts
 import prisma from "@/lib/prisma";
+import { Genero } from "./genero";
 
 export type Status = "QUERO_LER" | "LENDO" | "LIDO" | "PAUSADO" | "ABANDONADO";
-
-export type Genero = {
-  id: string;
-  name: string;
-}
 
 export type Book = {
   id: string;

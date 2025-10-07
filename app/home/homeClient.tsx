@@ -52,7 +52,7 @@ export default function HomeClientPage({ books, generos }: { books: Book[], gene
                 book.author.toLowerCase().includes(search.toLowerCase());
 
             
-            const matchesGenre = genre === "Todos" || !genre || book.genre === genre;
+            const matchesGenre = genre === "Todos" || !genre || book.genre.name  === genre;
 
             return matchesSearch && matchesGenre;
         });

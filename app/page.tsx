@@ -11,7 +11,7 @@ export default async function DashboardPage() {
     { title: "Total de Livros", value: recentlyReadBooks.length, icon: <Book size={32} /> },
     { title: "Livros em Leitura", value: readingBooks.length, icon: <BookOpenCheck size={32} /> },
     { title: "Livros Finalizados", value: readBooks.length, icon: <CheckCircle size={32} /> },
-    { title: "Total de Páginas Lidas", value: readPages.toString(), icon: <FileText size={32} /> },
-];
+    { title: "Total de Páginas Lidas", value: readPages, icon: <FileText size={32} /> },
+  ];
   return <DashboardClient recentlyReadBooks={recentlyReadBooks.slice(0, 5)} stats={stats} />;
 }
