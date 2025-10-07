@@ -132,6 +132,9 @@ export default function HomeClientPage({ books, generos }: { books: Book[], gene
                             coverUrl={book.cover}
                         />
                     ))}
+                    {filteredBooks.length === 0 && (
+                        <p className={theme != "light" ? "text-gray-200" : "text-gray-800"}>Nenhum livro encontrado.</p>
+                    )}
                 </div>
             </div>
         </section>

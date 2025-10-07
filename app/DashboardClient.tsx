@@ -43,6 +43,12 @@ export default function DashboardClientPage({ recentlyReadBooks, stats }: Dashbo
                 coverUrl={book.cover}
               />
             ))}
+            {recentlyReadBooks.length === 0 && (
+                <p className={theme != "light" ? "text-gray-200" : "text-gray-800"}>Nenhum livro encontrado.</p>
+            )}
+          </div>
+        </div>
+      </section>
           </div>
         </div>
       </section>
