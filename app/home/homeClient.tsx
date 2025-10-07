@@ -34,7 +34,7 @@ export default function HomeClientPage({ books, generos }: { books: Book[], gene
 
     const { theme } = useTheme();
 
-    const form = useForm({
+    const form = useForm<any>({
         resolver: yupResolver(formSchema),
         defaultValues: {
             search: "",
