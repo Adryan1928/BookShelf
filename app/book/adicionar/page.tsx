@@ -1,5 +1,7 @@
+import { getAllGeneros } from "@/lib/genero";
 import AddBookClient from "./AddBookClient";
 
 export default async function BookDetailsPage() {
-  return <AddBookClient />;
+  const generos = await getAllGeneros();
+  return <AddBookClient generos={generos} />;
 }

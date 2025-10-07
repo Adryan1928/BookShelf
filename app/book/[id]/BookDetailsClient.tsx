@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { Book } from "@/lib/books";
 import { DeleteBookDialog } from "@/components/DeleteBookDialog";
 import { useState } from "react";
-import { StarRating } from "@/components/Starts";
+import { StarRating } from "@/components/Stars";
 
 export default function BookDetailsClient({ book }: { book: Book }) {
   const router = useRouter();
